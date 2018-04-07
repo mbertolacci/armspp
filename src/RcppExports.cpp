@@ -5,29 +5,93 @@
 
 using namespace Rcpp;
 
-// arms
-SEXP arms(NumericVector xinit, double xl, double xr, Function lpdf, double convex, int npoint, int dometrop, double xprev, int nsamp, int include_neval);
-RcppExport SEXP _armspp_arms(SEXP xinitSEXP, SEXP xlSEXP, SEXP xrSEXP, SEXP lpdfSEXP, SEXP convexSEXP, SEXP npointSEXP, SEXP dometropSEXP, SEXP xprevSEXP, SEXP nsampSEXP, SEXP include_nevalSEXP) {
+// arms_gibbs2
+RObject arms_gibbs2(int nSamples, NumericVector previous, Function logPdf, NumericVector lower, NumericVector upper, List initial, NumericVector convex, IntegerVector maxPoints, IntegerVector metropolis, bool includeNEvaluations);
+RcppExport SEXP _armspp_arms_gibbs2(SEXP nSamplesSEXP, SEXP previousSEXP, SEXP logPdfSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP initialSEXP, SEXP convexSEXP, SEXP maxPointsSEXP, SEXP metropolisSEXP, SEXP includeNEvaluationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type xinit(xinitSEXP);
-    Rcpp::traits::input_parameter< double >::type xl(xlSEXP);
-    Rcpp::traits::input_parameter< double >::type xr(xrSEXP);
-    Rcpp::traits::input_parameter< Function >::type lpdf(lpdfSEXP);
-    Rcpp::traits::input_parameter< double >::type convex(convexSEXP);
-    Rcpp::traits::input_parameter< int >::type npoint(npointSEXP);
-    Rcpp::traits::input_parameter< int >::type dometrop(dometropSEXP);
-    Rcpp::traits::input_parameter< double >::type xprev(xprevSEXP);
+    Rcpp::traits::input_parameter< int >::type nSamples(nSamplesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type previous(previousSEXP);
+    Rcpp::traits::input_parameter< Function >::type logPdf(logPdfSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< List >::type initial(initialSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type convex(convexSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type maxPoints(maxPointsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type metropolis(metropolisSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeNEvaluations(includeNEvaluationsSEXP);
+    rcpp_result_gen = Rcpp::wrap(arms_gibbs2(nSamples, previous, logPdf, lower, upper, initial, convex, maxPoints, metropolis, includeNEvaluations));
+    return rcpp_result_gen;
+END_RCPP
+}
+// arms_gibbs
+NumericMatrix arms_gibbs(int nSamples, NumericVector xPrevious, Function logPdf, NumericVector xLower, NumericVector xUpper, List xInitial, NumericVector convex, IntegerVector maxPoints, IntegerVector metropolis);
+RcppExport SEXP _armspp_arms_gibbs(SEXP nSamplesSEXP, SEXP xPreviousSEXP, SEXP logPdfSEXP, SEXP xLowerSEXP, SEXP xUpperSEXP, SEXP xInitialSEXP, SEXP convexSEXP, SEXP maxPointsSEXP, SEXP metropolisSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nSamples(nSamplesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xPrevious(xPreviousSEXP);
+    Rcpp::traits::input_parameter< Function >::type logPdf(logPdfSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xLower(xLowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xUpper(xUpperSEXP);
+    Rcpp::traits::input_parameter< List >::type xInitial(xInitialSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type convex(convexSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type maxPoints(maxPointsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type metropolis(metropolisSEXP);
+    rcpp_result_gen = Rcpp::wrap(arms_gibbs(nSamples, xPrevious, logPdf, xLower, xUpper, xInitial, convex, maxPoints, metropolis));
+    return rcpp_result_gen;
+END_RCPP
+}
+// arms
+RObject arms(List xInitial, NumericVector xl, NumericVector xr, List lpdf, NumericVector convex, IntegerVector npoint, IntegerVector dometrop, NumericVector xprev, List arguments, int nsamp, int include_neval);
+RcppExport SEXP _armspp_arms(SEXP xInitialSEXP, SEXP xlSEXP, SEXP xrSEXP, SEXP lpdfSEXP, SEXP convexSEXP, SEXP npointSEXP, SEXP dometropSEXP, SEXP xprevSEXP, SEXP argumentsSEXP, SEXP nsampSEXP, SEXP include_nevalSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type xInitial(xInitialSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xl(xlSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xr(xrSEXP);
+    Rcpp::traits::input_parameter< List >::type lpdf(lpdfSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type convex(convexSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type npoint(npointSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dometrop(dometropSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xprev(xprevSEXP);
+    Rcpp::traits::input_parameter< List >::type arguments(argumentsSEXP);
     Rcpp::traits::input_parameter< int >::type nsamp(nsampSEXP);
     Rcpp::traits::input_parameter< int >::type include_neval(include_nevalSEXP);
-    rcpp_result_gen = Rcpp::wrap(arms(xinit, xl, xr, lpdf, convex, npoint, dometrop, xprev, nsamp, include_neval));
+    rcpp_result_gen = Rcpp::wrap(arms(xInitial, xl, xr, lpdf, convex, npoint, dometrop, xprev, arguments, nsamp, include_neval));
+    return rcpp_result_gen;
+END_RCPP
+}
+// arms2
+RObject arms2(int nSamples, List logPdf, NumericVector lower, NumericVector upper, List initial, NumericVector convex, IntegerVector maxPoints, IntegerVector metropolis, NumericVector previous, List arguments, bool includeNEvaluations);
+RcppExport SEXP _armspp_arms2(SEXP nSamplesSEXP, SEXP logPdfSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP initialSEXP, SEXP convexSEXP, SEXP maxPointsSEXP, SEXP metropolisSEXP, SEXP previousSEXP, SEXP argumentsSEXP, SEXP includeNEvaluationsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nSamples(nSamplesSEXP);
+    Rcpp::traits::input_parameter< List >::type logPdf(logPdfSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< List >::type initial(initialSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type convex(convexSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type maxPoints(maxPointsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type metropolis(metropolisSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type previous(previousSEXP);
+    Rcpp::traits::input_parameter< List >::type arguments(argumentsSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeNEvaluations(includeNEvaluationsSEXP);
+    rcpp_result_gen = Rcpp::wrap(arms2(nSamples, logPdf, lower, upper, initial, convex, maxPoints, metropolis, previous, arguments, includeNEvaluations));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_armspp_arms", (DL_FUNC) &_armspp_arms, 10},
+    {"_armspp_arms_gibbs2", (DL_FUNC) &_armspp_arms_gibbs2, 10},
+    {"_armspp_arms_gibbs", (DL_FUNC) &_armspp_arms_gibbs, 9},
+    {"_armspp_arms", (DL_FUNC) &_armspp_arms, 11},
+    {"_armspp_arms2", (DL_FUNC) &_armspp_arms2, 11},
     {NULL, NULL, 0}
 };
 

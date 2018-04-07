@@ -4,10 +4,10 @@
 \alias{arms}
 \title{Adaptive Rejection Metropolis Sampling}
 \usage{
-arms(n_samples, log_pdf, lower, upper, x_initial = lower + (1:n_initial) *
-  (upper - lower)/(n_initial + 1), n_initial = 10, convex = 0,
-  max_points = 100, metropolis = FALSE, x_previous = NA,
-  include_neval = FALSE)
+arms(n_samples, log_pdf, lower, upper, x_previous = (upper + lower)/2,
+  x_initial = lower + (1:n_initial) * (upper - lower)/(n_initial + 1),
+  n_initial = 10, convex = 0, max_points = max(2 * n_initial + 1, 100),
+  metropolis = TRUE, include_n_evaluations = FALSE, arguments = list())
 }
 \arguments{
 \item{n_samples}{Number of samples to return}
@@ -17,6 +17,8 @@ arms(n_samples, log_pdf, lower, upper, x_initial = lower + (1:n_initial) *
 \item{lower}{Lower bound of the support of the distribution}
 
 \item{upper}{Upper bound of the support of the distribution}
+
+\item{x_previous}{The previous value of the Markov chain to be used if `metropolis = TRUE`}
 
 \item{x_initial}{Initial points with which to build the rejection distribution}
 
@@ -28,12 +30,10 @@ arms(n_samples, log_pdf, lower, upper, x_initial = lower + (1:n_initial) *
 
 \item{metropolis}{Whether to use a Metropolis-Hastings step after rejection sampling}
 
-\item{x_previous}{The previous value of the Markov chain to be used if `metropolis = TRUE`}
-
-\item{include_neval}{Whether to return an object specifying the number of function evaluations used}
+\item{include_n_evaluations}{Whether to return an object specifying the number of function evaluations used}
 }
 \value{
-Vector of samples if include_neval is FALSE, otherwise a list
+Vector of samples if include_n_evaluations is FALSE, otherwise a list
 }
 \description{
 Adaptive Rejection Metropolis Sampling
