@@ -2,6 +2,23 @@
 
 namespace armspp {
 
+class exception : public std::exception {
+public:
+  explicit exception(const char* message_)
+    : message(message_) {}
+
+  exception(const char* message_, const char*, int)
+    : message(message_) {}
+
+  virtual ~exception() throw() {}
+  virtual const char* what() const throw() {
+    return message.c_str();
+  }
+
+private:
+  std::string message;
+};
+
 template<typename Scalar, typename Functor, typename Iterator>
 class ARMS {
 public:
@@ -24,28 +41,28 @@ public:
       xPrevious_(xPrevious) {
 
     if (nInitial < 3) {
-      Rcpp::stop("Too few initial points");
+      throw exception("Too few initial points");
     }
 
     // Set up the initial envelope
     int nEnvelopeInitial = 2 * nInitial + 1;
 
     if (nEnvelopeInitial > maxPoints_) {
-      Rcpp::stop("Too many initial points");
+      throw exception("Too many initial points");
     }
 
     if (xInitial[0] <= lower_ || xInitial[nInitial - 1] >= upper_) {
-      Rcpp::stop("Initial points do not satisfy bounds");
+      throw exception("Initial points do not satisfy bounds");
     }
 
     for (int i = 1; i < nInitial; ++i) {
       if (xInitial[i] <= xInitial[i - 1]) {
-        Rcpp::stop("Initial points are not ordered");
+        throw exception("Initial points are not ordered");
       }
     }
 
     if (convex_ < 0) {
-      Rcpp::stop("Convexity parameter is negative");
+      throw exception("Convexity parameter is negative");
     }
 
     // Left bound
@@ -85,7 +102,7 @@ public:
     using std::prev;
     using std::next;
 
-    while (true) {
+    for (int iteration = 0; iteration < MAX_ITERATIONS; ++iteration) {
       WorkingPoint w = invert_(uniform_(rng));
 
       // For rejection test
@@ -166,7 +183,12 @@ public:
         }
       }
     }
-    return -1;
+
+    throw exception("Maximum number of iterations exceeded");
+  }
+
+  Scalar envelopeQuantile(Scalar probability) {
+    return invert_(probability).p.x;
   }
 
 private:
@@ -219,10 +241,11 @@ private:
   Scalar xPrevious_;
   Scalar yPrevious_;
 
-  const Scalar X_EPSILON = 0.1;
+  const Scalar X_EPSILON = 0.00001;
   const Scalar Y_EPSILON = 0.1;
   const Scalar EXP_Y_EPSILON = 0.001;
   const Scalar Y_CEILING = 50.;
+  const int MAX_ITERATIONS = 10000;
 
   void addPoint(WorkingPoint w) {
     using std::prev;
@@ -296,14 +319,14 @@ private:
 
     if (irl && il && gl < grl) {
       /* convexity on left exceeds current threshold */
-      if (!metropolis_) Rcpp::stop("Envelope violation");
+      if (!metropolis_) throw exception("Envelope violation");
       /* adjust left gradient */
       gl = gl + (1.0 + convex_) * (grl - gl);
     }
 
     if (irl && ir && gr > grl) {
       /* convexity on right exceeds current threshold */
-      if (!metropolis_) Rcpp::stop("Envelope violation");
+      if (!metropolis_) throw exception("Envelope violation");
       /* adjust right gradient */
       gr = gr + (1.0 + convex_) * (grl - gr);
     }
@@ -344,12 +367,12 @@ private:
       q->y = next(q)->y - gr * (next(q)->x - q->x);
     } else {
       /* gradient on neither side - should be impossible */
-      Rcpp::stop("arms error 31");
+      throw exception("arms error 31");
     }
     if(((q != points_.begin()) && (q->x < prev(q)->x)) ||
        ((next(q) != points_.end()) && (q->x > next(q)->x))) {
       /* intersection point outside interval (through imprecision) */
-      Rcpp::stop("arms error 32");
+      throw exception("intersection point outside interval");
     }
   }
 
@@ -387,6 +410,7 @@ private:
     Point p(0, 0, 0, u, false);
 
     Scalar proportion = (u - prev(q)->cumulative) / (q->cumulative - prev(q)->cumulative);
+
     /* get the required x-value */
     if (prev(q)->x == q->x){
       /* interval is of zero length */
@@ -421,7 +445,19 @@ private:
       }
 
       /* guard against imprecision yielding point outside interval */
-      if ((p.x < xl) || (p.x > xr)) Rcpp::stop("arms error 1");
+      if ((p.x < xl) || (p.x > xr)) {
+        Rcpp::Rcout << "\n=====\n\nI AM HERE: "
+          << proportion << " | "
+          << (1 - proportion) << " | "
+          << std::abs(yr - yl) << " | "
+          << std::abs(eyr - eyl) << " | "
+          << std::abs(eyr + eyl) << " | "
+          << xl << " " << yl << " | "
+          << p.x << " " << p.y << " " << p.expY << "  | "
+          << xr << " " << yl << " | "
+          << "\n\n====";
+        throw exception("generated point outside interval");
+      }
     }
 
     return WorkingPoint(p, prev(q), q);

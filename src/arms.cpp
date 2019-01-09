@@ -37,8 +37,8 @@ private:
   int nEvaluations_;
 };
 
-// [[Rcpp::export(name = '.arms2')]]
-RObject arms2(
+// [[Rcpp::export(name = '.arms')]]
+RObject arms(
   int nSamples,
   List logPdf,
   NumericVector lower,
@@ -78,7 +78,7 @@ RObject arms2(
     && maxArgumentsSize == 1
   ) {
     // Special case: only one distribution to sample from
-    NumericVector initialVector = initial[0];
+    NumericVector initialVector(clone(as<NumericVector>(initial[0])));
 
     FunctionWrapper f(logPdf[0], listToDottedPair(arguments, 0));
     ARMS<double, FunctionWrapper, NumericVector::iterator> dist(
@@ -94,7 +94,7 @@ RObject arms2(
     nEvaluations += f.nEvaluations();
   } else {
     for (int i = 0; i < nSamples; ++i) {
-      NumericVector initialVector = initial[i % initial.size()];
+      NumericVector initialVector(clone(as<NumericVector>(initial[i % initial.size()])));
 
       FunctionWrapper f(
         logPdf[i % logPdf.size()],

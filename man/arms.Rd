@@ -4,42 +4,79 @@
 \alias{arms}
 \title{Adaptive Rejection Metropolis Sampling}
 \usage{
-arms(n_samples, log_pdf, lower, upper, x_previous = (upper + lower)/2,
-  x_initial = lower + (1:n_initial) * (upper - lower)/(n_initial + 1),
+arms(n_samples, log_pdf, lower, upper, previous = (upper + lower)/2,
+  initial = lower + (1:n_initial) * (upper - lower)/(n_initial + 1),
   n_initial = 10, convex = 0, max_points = max(2 * n_initial + 1, 100),
   metropolis = TRUE, include_n_evaluations = FALSE, arguments = list())
 }
 \arguments{
-\item{n_samples}{Number of samples to return}
+\item{n_samples}{Number of samples to return.}
 
-\item{log_pdf}{Potentially unnormalised log density from which to sample}
+\item{log_pdf}{Potentially unnormalised log density of target distribution.}
 
-\item{lower}{Lower bound of the support of the distribution}
+\item{lower}{Lower bound of the support of the target distribution.}
 
-\item{upper}{Upper bound of the support of the distribution}
+\item{upper}{Upper bound of the support of the target distribution.}
 
-\item{x_previous}{The previous value of the Markov chain to be used if `metropolis = TRUE`}
+\item{previous}{The previous value of the Markov chain to be used if
+\code{metropolis = TRUE}.}
 
-\item{x_initial}{Initial points with which to build the rejection distribution}
+\item{initial}{Initial points with which to build the rejection distribution.}
 
-\item{n_initial}{Number of points used to form `x_initial`; ignored if `x_initial` provided.}
+\item{n_initial}{Number of points used to form \code{initial}; ignored if
+\code{initial} provided.}
 
-\item{convex}{Convexity adjustment}
+\item{convex}{Convexity adjustment.}
 
-\item{max_points}{Maximum number of points to allow in the rejection distribution}
+\item{max_points}{Maximum number of points to allow in the rejection
+distribution.}
 
-\item{metropolis}{Whether to use a Metropolis-Hastings step after rejection sampling}
+\item{metropolis}{Whether to use a Metropolis-Hastings step after rejection
+sampling. Not necessary if the target distribution is log concave.}
 
-\item{include_n_evaluations}{Whether to return an object specifying the number of function evaluations used}
+\item{include_n_evaluations}{Whether to return an object specifying the
+number of function evaluations used.}
 }
 \value{
-Vector of samples if include_n_evaluations is FALSE, otherwise a list
+Vector of samples if \code{include_n_evaluations} is \code{FALSE}, otherwise a list.
 }
 \description{
-Adaptive Rejection Metropolis Sampling
+This function performs Adaptive Rejection Metropolis Sampling to sample from
+a target distribution specified by its (potentially unnormalised) log
+density. The function constructs a rejection distribution based on piecewise
+linear functions that envelop the log density of the target.
+\cr\cr
+If the target is log-concave, the \code{metropolis} parameter can be set to
+\code{FALSE}, and an accept-reject sampling scheme is used which yields
+independent samples.
+\cr\cr
+Otherwise, if \code{metropolis} is \code{TRUE}, a Metropolis-Hastings step is
+used to construct a Markov chain with a stationary distribution matching the
+target. It is possible in this case for the rejection distribution to be a
+poor proposal, so users should be careful to check the output matches the
+desired distribution.
+}
+\examples{
+# The normal distribution, which is log concave, so metropolis can be FALSE
+result <- arms(
+  1000, dnorm, -1000, 1000, metropolis = FALSE,
+  arguments = list(log = TRUE), include_n_evaluations = TRUE
+)
+print(result$n_evaluations)
+hist(result$samples, freq = FALSE, br = 20)
+curve(dnorm(x), min(result$samples), max(result$samples), col = 'red', add = TRUE)
+
+# Mixture of normals: 0.4 N(-1, 1) + 0.6 N(4, 1). Not log concave.
+dnormmixture <- function(x) {
+  parts <- log(c(0.4, 0.6)) + dnorm(x, mean = c(-1, 4), log = TRUE)
+  log(sum(exp(parts - max(parts)))) + max(parts)
+}
+samples <- arms(1000, dnormmixture, -1000, 1000)
+hist(samples, freq = FALSE)
 }
 \references{
-Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive rejection Metropolis sampling. Applied Statistics, 44, 455-472.
+Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
+rejection Metropolis sampling. Applied Statistics, 44, 455-472.
 }
 \seealso{
 \url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}

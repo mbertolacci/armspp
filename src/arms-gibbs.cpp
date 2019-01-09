@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <random>
 #include <armspp>
+#include <RProgress.h>
 
 #include "utils.hpp"
 
@@ -8,8 +9,8 @@ using namespace Rcpp;
 using armspp::ARMS;
 using armspp::listToDottedPair;
 
-// [[Rcpp::export(name = '.arms_gibbs2')]]
-RObject arms_gibbs2(
+// [[Rcpp::export(name = '.arms_gibbs')]]
+RObject armsGibbs(
   int nSamples,
   NumericVector previous,
   Function logPdf,
@@ -18,20 +19,23 @@ RObject arms_gibbs2(
   NumericVector convex,
   IntegerVector maxPoints,
   IntegerVector metropolis,
-  bool includeNEvaluations
+  bool includeNEvaluations,
+  bool showProgress
 ) {
   std::mt19937_64 rng(static_cast<uint_fast64_t>(UINT_FAST64_MAX * R::unif_rand()));
   int nDimensions = previous.size();
 
   NumericMatrix samples(nSamples, nDimensions);
-  NumericVector current(previous);
+  NumericVector current(clone(previous));
   int nEvaluations = 0;
   int p;
   auto logPdfLambda = [&](double x) -> double {
     current[p] = x;
     ++nEvaluations;
-    return as<NumericVector>(logPdf(current, p))[0];
+    return as<NumericVector>(logPdf(current, p + 1))[0];
   };
+
+  RProgress::RProgress pb("[:bar] :current/:total eta: :eta", nSamples);
 
   for (int i = 0; i < nSamples; ++i) {
     for (p = 0; p < nDimensions; ++p) {
@@ -51,6 +55,10 @@ RObject arms_gibbs2(
       current[p] = dist(rng);
 
       samples(i, p) = current[p];
+    }
+
+    if (showProgress) {
+      pb.tick();
     }
   }
   Nullable<CharacterVector> names = previous.names();
