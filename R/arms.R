@@ -147,6 +147,82 @@ arms <- function(
   )
 }
 
+
+#' Gibbs sampling using ARMS
+#'
+#' This function uses ARMS (see also \code{\link{arms}}) to sample from
+#' a multivariate target distribution specified by its (potentially
+#' unnormalised) log density using Gibbs sampling. The function updates each
+#' argument to the log pdf in turn using ARMS, returning a matrix of samples.
+#' \cr\cr
+#' The arguments to this function have the same meaning as for
+#' \code{\link{arms}}, except here they are recycled along the dimension of
+#' \code{previous}, rather than from sample to sample.
+#'
+#' @param n_samples Number of samples to return.
+#' @param log_pdf Potentially unnormalised log density of target distribution.
+#' @param previous Starting value for the Gibbs sampler. Vectors of this length
+#' are passed to \code{log_pdf} as the first argument.
+#' @param lower Lower bound of the support of the target distribution.
+#' @param upper Upper bound of the support of the target distribution.
+#' @param initial Initial points with which to build the rejection distribution.
+#' @param n_initial Number of points used to form \code{initial}; ignored if
+#' \code{initial} provided.
+#' @param convex Convexity adjustment.
+#' @param max_points Maximum number of points to allow in the rejection
+#' distribution.
+#' @param metropolis Whether to use a Metropolis-Hastings step after rejection
+#' sampling. Not necessary if the target distribution is log concave.
+#' @param include_n_evaluations Whether to return an object specifying the
+#' number of function evaluations used.
+#' @param show_progress If \code{TRUE}, a progress bar is shown.
+#' @return Matrix of samples if \code{include_n_evaluations} is \code{FALSE},
+#' otherwise a list.
+#' @seealso \url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
+#' @references Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
+#' rejection Metropolis sampling. Applied Statistics, 44, 455-472.
+#' @examples
+#' # The classic 8schools example from RStan
+#' # https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started
+#' schools_data <- list(
+#'   J = 8,
+#'   y = c(28,  8, -3,  7, -1,  1, 18, 12),
+#'   sigma = c(15, 10, 16, 11,  9, 11, 10, 18)
+#' )
+#'
+#' log_pdf <- function(params, p) {
+#'   mu <- params[1]
+#'   tau <- params[2]
+#'   eta <- params[3 : (3 + schools_data$J - 1)]
+#
+#'   output <- (
+#'     sum(dnorm(eta, 0, 1, log = TRUE)) +
+#'     sum(dnorm(
+#'       schools_data$y,
+#'       mu + tau * eta,
+#'       schools_data$sigma,
+#'       log = TRUE
+#'     ))
+#'   )
+#'   return(output)
+#' }
+#'
+#' x_start <- c(0, 0, rep(0, schools_data$J))
+#' names(x_start) <- c(
+#'   'mu',
+#'   'tau',
+#'   paste0('eta', 1 : schools_data$J)
+#' )
+#'
+#' samples <- arms_gibbs(
+#'   1000,
+#'   x_start,
+#'   log_pdf,
+#'   c(-1000, 0, rep(-1000, schools_data$J)),
+#'   1000,
+#'   metropolis = FALSE
+#' )
+#' print(colMeans(samples[101 : 1000, ]))
 #' @export
 arms_gibbs <- function(
   n_samples,
