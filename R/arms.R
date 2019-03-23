@@ -34,9 +34,16 @@
 #' target. It is possible in this case for the rejection distribution to be a
 #' poor proposal, so users should be careful to check the output matches the
 #' desired distribution.
+#' \cr\cr
+#' All arguments other than \code{n_samples}, \code{include_n_evaluations} and
+#' \code{arguments} can be either vectors or lists as appropriate. If they are
+#' vectors, they will be recycled in the same manner as, e.g., rnorm. The
+#' entries of \code{arguments} may be vectors/lists and will also be recycled
+#' (see examples).
 #'
 #' @param n_samples Number of samples to return.
 #' @param log_pdf Potentially unnormalised log density of target distribution.
+#' Can also be a list of functions.
 #' @param lower Lower bound of the support of the target distribution.
 #' @param upper Upper bound of the support of the target distribution.
 #' @param initial Initial points with which to build the rejection distribution.
@@ -51,7 +58,9 @@
 #' \code{metropolis = TRUE}.
 #' @param include_n_evaluations Whether to return an object specifying the
 #' number of function evaluations used.
-#' @return Vector of samples if \code{include_n_evaluations} is \code{FALSE}, otherwise a list.
+#' @param arguments List of additional arguments to be passed to log_pdf
+#' @return Vector or matrix of samples if \code{include_n_evaluations} is
+#' \code{FALSE}, otherwise a list.
 #' @seealso \url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
 #' @references Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
 #' rejection Metropolis sampling. Applied Statistics, 44, 455-472.
@@ -72,6 +81,27 @@
 #' }
 #' samples <- arms(1000, dnormmixture, -1000, 1000)
 #' hist(samples, freq = FALSE)
+#'
+#' # List of log pdfs, demonstrating recycling of log_pdf argument
+#' samples <- arms(
+#'   10,
+#'   list(
+#'     function(x) -x ^ 2 / 2,
+#'     function(x) -(x - 10) ^ 2 / 2
+#'   ),
+#'   -1000,
+#'   1000
+#' )
+#' print(samples)
+#'
+#' # Another way to achieve the above, this time with recycling in arguments
+#' samples <- arms(
+#'   10, dnorm, -1000, 1000,
+#'   arguments = list(
+#'     mean = c(0, 10), sd = 1, log = TRUE
+#'   )
+#' )
+#' print(samples)
 #' @export
 arms <- function(
   n_samples,

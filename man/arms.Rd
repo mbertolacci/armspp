@@ -12,7 +12,8 @@ arms(n_samples, log_pdf, lower, upper, previous = (upper + lower)/2,
 \arguments{
 \item{n_samples}{Number of samples to return.}
 
-\item{log_pdf}{Potentially unnormalised log density of target distribution.}
+\item{log_pdf}{Potentially unnormalised log density of target distribution.
+Can also be a list of functions.}
 
 \item{lower}{Lower bound of the support of the target distribution.}
 
@@ -36,9 +37,12 @@ sampling. Not necessary if the target distribution is log concave.}
 
 \item{include_n_evaluations}{Whether to return an object specifying the
 number of function evaluations used.}
+
+\item{arguments}{List of additional arguments to be passed to log_pdf}
 }
 \value{
-Vector of samples if \code{include_n_evaluations} is \code{FALSE}, otherwise a list.
+Vector or matrix of samples if \code{include_n_evaluations} is
+\code{FALSE}, otherwise a list.
 }
 \description{
 This function performs Adaptive Rejection Metropolis Sampling to sample from
@@ -55,6 +59,12 @@ used to construct a Markov chain with a stationary distribution matching the
 target. It is possible in this case for the rejection distribution to be a
 poor proposal, so users should be careful to check the output matches the
 desired distribution.
+\cr\cr
+All arguments other than \code{n_samples}, \code{include_n_evaluations} and
+\code{arguments} can be either vectors or lists as appropriate. If they are
+vectors, they will be recycled in the same manner as, e.g., rnorm. The
+entries of \code{arguments} may be vectors/lists and will also be recycled
+(see examples).
 }
 \examples{
 # The normal distribution, which is log concave, so metropolis can be FALSE
@@ -73,6 +83,27 @@ dnormmixture <- function(x) {
 }
 samples <- arms(1000, dnormmixture, -1000, 1000)
 hist(samples, freq = FALSE)
+
+# List of log pdfs, demonstrating recycling of log_pdf argument
+samples <- arms(
+  10,
+  list(
+    function(x) -x ^ 2 / 2,
+    function(x) -(x - 10) ^ 2 / 2
+  ),
+  -1000,
+  1000
+)
+print(samples)
+
+# Another way to achieve the above, this time with recycling in arguments
+samples <- arms(
+  10, dnorm, -1000, 1000,
+  arguments = list(
+    mean = c(0, 10), sd = 1, log = TRUE
+  )
+)
+print(samples)
 }
 \references{
 Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
