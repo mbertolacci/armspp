@@ -53,6 +53,54 @@ test_that('arms with metropolis gives output with the expected length', {
   expect_equal(length(output), n_samples)
 })
 
+test_that('arms accepts arguments passed to log pdf', {
+  run_arms <- function(arguments) {
+    n_samples <- 10
+    output <- arms(
+      n_samples,
+      log_dnorm,
+      -100,
+      100,
+      arguments = arguments,
+      metropolis = FALSE
+    )
+    expect_equal(length(output), n_samples)
+  }
+
+  # Named argument
+  run_arms(list(sd = 1))
+
+  # Unnamed argument
+  run_arms(list(1))
+
+  # Non-vector argument
+  output <- arms(
+    1,
+    function(x, y) {
+      stopifnot(is.matrix(y))
+      dnorm(x, log = TRUE)
+    },
+    -100,
+    100,
+    arguments = list(y = matrix(0, nrow = 2, ncol = 2)),
+    metropolis = FALSE
+  )
+  expect_equal(length(output), 1)
+})
+
+test_that('arms accepts initial argument', {
+  n_samples <- 10
+  output <- arms(
+    n_samples,
+    log_dnorm,
+    -100,
+    100,
+    initial = c(-5, 0, 5),
+    metropolis = FALSE
+  )
+  expect_equal(length(output), n_samples)
+})
+
 test_that('arms recycles arguments', {
   samples <- matrix(
     arms(200, log_dnorm, -1000, 1000, metropolis = FALSE, arguments = list(

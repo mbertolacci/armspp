@@ -44,3 +44,18 @@ test_that('arms_gibbs with include_evaluations has the right structure', {
   expect_true(output$n_evaluations > 0)
   expect_equal(dim(output$samples), c(n_samples, n_dim))
 })
+
+test_that('arms_gibbs accepts show_progress', {
+  n_samples <- 10
+  n_dim <- 2
+  output <- arms_gibbs(
+    n_samples,
+    rep(0, n_dim),
+    log_dnorm,
+    -10,
+    10,
+    metropolis = FALSE,
+    show_progress = TRUE
+  )
+  expect_equal(dim(output), c(n_samples, n_dim))
+})
