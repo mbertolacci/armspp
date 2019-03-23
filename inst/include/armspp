@@ -1,4 +1,8 @@
+#include <cmath>
+#include <iterator>
+#include <list>
 #include <random>
+#include <string>
 
 namespace armspp {
 
@@ -446,16 +450,6 @@ private:
 
       /* guard against imprecision yielding point outside interval */
       if ((p.x < xl) || (p.x > xr)) {
-        Rcpp::Rcout << "\n=====\n\nI AM HERE: "
-          << proportion << " | "
-          << (1 - proportion) << " | "
-          << std::abs(yr - yl) << " | "
-          << std::abs(eyr - eyl) << " | "
-          << std::abs(eyr + eyl) << " | "
-          << xl << " " << yl << " | "
-          << p.x << " " << p.y << " " << p.expY << "  | "
-          << xr << " " << yl << " | "
-          << "\n\n====";
         throw exception("generated point outside interval");
       }
     }
