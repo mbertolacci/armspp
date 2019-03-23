@@ -2,7 +2,7 @@
 #include <random>
 #include <armspp>
 
-#include "utils.hpp"
+#include "utils.h"
 
 using namespace Rcpp;
 using armspp::ARMS;
