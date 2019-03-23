@@ -1,8 +1,8 @@
 Package: armspp
-Title: Adaptive Rejection Metropolis Sampling via Rcpp
+Title: Adaptive Rejection Metropolis Sampling (ARMS) via Rcpp
 Version: 0.0.0.9000
 Authors@R: person("Michael", "Bertolacci", email = "m.bertolacci@gmail.com", role = c("aut", "cre"))
-Description: Provide Rcpp implementation of Adaptive Rejection Metropolis Sampling
+Description: Provides an Rcpp implementation of Adaptive Rejection Metropolis Sampling (ARMS).
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -17,5 +17,6 @@ RoxygenNote: 6.0.1
 Suggests: 
     knitr,
     rmarkdown,
-    covr
+    covr,
+    testthat
 VignetteBuilder: knitr
