@@ -6,8 +6,9 @@
 \usage{
 arms(n_samples, log_pdf, lower, upper, previous = (upper + lower)/2,
   initial = lower + (1:n_initial) * (upper - lower)/(n_initial + 1),
-  n_initial = 10, convex = 0, max_points = max(2 * n_initial + 1, 100),
-  metropolis = TRUE, include_n_evaluations = FALSE, arguments = list())
+  n_initial = 10, convex = 0, max_points = max(2 * n_initial + 1,
+  100), metropolis = TRUE, include_n_evaluations = FALSE,
+  arguments = list())
 }
 \arguments{
 \item{n_samples}{Number of samples to return.}
