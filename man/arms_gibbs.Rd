@@ -85,14 +85,14 @@ names(x_start) <- c(
 )
 
 samples <- arms_gibbs(
-  1000,
+  250,
   x_start,
   log_pdf,
   c(-1000, 0, rep(-1000, schools_data$J)),
   1000,
   metropolis = FALSE
 )
-print(colMeans(samples[101 : 1000, ]))
+print(colMeans(samples[51 : 250, ]))
 }
 \references{
 Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
