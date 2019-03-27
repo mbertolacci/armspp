@@ -3,4 +3,5 @@
 export(arms)
 export(arms_gibbs)
 importFrom(Rcpp,sourceCpp)
+importFrom(progress,progress_bar)
 useDynLib(armspp)
