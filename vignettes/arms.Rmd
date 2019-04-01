@@ -20,11 +20,13 @@ library(armspp)
 
 # Background
 
-# Gibbs sampling
+[Adaptive Rejection Metropolis Sampling (ARMS)](http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html) is a Markov chain Monte Carlo based algorithm to sample from a univariate target distribution specified by its (potentially unnormalised) log density. The algorithm constructs a rejection distribution based on piecewise linear functions that envelop the log density of the target. For distributions with [log concave](https://en.wikipedia.org/wiki/Logarithmically_concave_function) density functions, this envelope is used directly, and usually results in a very efficient sampler. For distributions that are not log concave, or have unknown log concavity, an extra [Metropolis Hastings accept/reject](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm) step is used to correct for any mismatch between the proposal density and the target. This sometimes results in a sampler with good convergence properties.
+
+This R package provides an efficient C++ reimplementation of ARMS.
 
 # Using the R package
 
-## Overview
+You can run ARMS by calling the `arms` function. Usage is best illustrated by examples, given in the next two sections.
 
 ## Example: normal distribution
 
@@ -78,3 +80,5 @@ curve(exp(Vectorize(dnormmixture)(x)), -7, 10, col = 'red', add = TRUE)
 ```
 
 # Using the C++ implementation
+
+The R package contains a header-only C++ implementation of the algorithm, which can be used in other packages. To use it, add this package (`armspp`) to the `LinkingTo` for your package, then `#include <armspp>` in a C++ file. You can find an example for how to call this function in the [`src/armspp.cpp` of this package](https://github.com/mbertolacci/armspp/blob/master/src/arms.cpp).
