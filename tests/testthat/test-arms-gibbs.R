@@ -48,14 +48,17 @@ test_that('arms_gibbs with include_evaluations has the right structure', {
 test_that('arms_gibbs accepts show_progress', {
   n_samples <- 10
   n_dim <- 2
-  output <- arms_gibbs(
-    n_samples,
-    rep(0, n_dim),
-    log_dnorm,
-    -10,
-    10,
-    metropolis = FALSE,
-    show_progress = TRUE
-  )
+  captured_output <- capture.output({
+    output <- arms_gibbs(
+      n_samples,
+      rep(0, n_dim),
+      log_dnorm,
+      -10,
+      10,
+      metropolis = FALSE,
+      show_progress = TRUE
+    )
+  })
+  expect_true(nchar(captured_output) > 0)
   expect_equal(dim(output), c(n_samples, n_dim))
 })

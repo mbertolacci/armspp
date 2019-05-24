@@ -1,13 +1,13 @@
 #include <Rcpp.h>
 #include <random>
 #include <armspp>
-#include <RProgress.h>
 
+#include "progress.h"
 #include "utils.h"
 
 using namespace Rcpp;
 using armspp::ARMS;
-using armspp::listToDottedPair;
+using armspp::ProgressBar;
 
 // [[Rcpp::export(name = '.arms_gibbs')]]
 RObject armsGibbs(
@@ -35,7 +35,7 @@ RObject armsGibbs(
     return as<NumericVector>(logPdf(current, p + 1))[0];
   };
 
-  RProgress::RProgress pb("[:bar] :current/:total eta: :eta", nSamples);
+  ProgressBar pb(nSamples);
 
   for (int i = 0; i < nSamples; ++i) {
     for (p = 0; p < nDimensions; ++p) {
@@ -58,7 +58,7 @@ RObject armsGibbs(
     }
 
     if (showProgress) {
-      pb.tick();
+      ++pb;
     }
   }
   Nullable<CharacterVector> names = previous.names();
