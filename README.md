@@ -1,7 +1,7 @@
 # armspp
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/armspp)](https://cran.r-project.org/package=armspp) [![Travis build status](https://travis-ci.org/mbertolacci/armspp.svg?branch=master)](https://travis-ci.org/mbertolacci/armspp) [![Coverage status](https://codecov.io/gh/mbertolacci/armspp/branch/master/graph/badge.svg)](https://codecov.io/github/mbertolacci/armspp?branch=master)
+status](https://www.r-pkg.org/badges/version/armspp)](https://cran.r-project.org/package=armspp) [![R-CMD-check](https://github.com/mbertolacci/armspp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbertolacci/armspp/actions/workflows/R-CMD-check.yaml)
 
 This R package provides a header-only C++ implementation of [Adaptive Rejection Metropolis Sampling (ARMS)](http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html), along with R packages for the same purpose. The C++ implementation is not tied to R and can be used outside the context of this package.
 
