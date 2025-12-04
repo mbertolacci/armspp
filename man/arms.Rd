@@ -4,11 +4,20 @@
 \alias{arms}
 \title{Adaptive Rejection Metropolis Sampling}
 \usage{
-arms(n_samples, log_pdf, lower, upper, previous = (upper + lower)/2,
+arms(
+  n_samples,
+  log_pdf,
+  lower,
+  upper,
+  previous = (upper + lower)/2,
   initial = lower + (1:n_initial) * (upper - lower)/(n_initial + 1),
-  n_initial = 10, convex = 0, max_points = max(2 * n_initial + 1,
-  100), metropolis = TRUE, include_n_evaluations = FALSE,
-  arguments = list())
+  n_initial = 10,
+  convex = 0,
+  max_points = max(2 * n_initial + 1, 100),
+  metropolis = TRUE,
+  include_n_evaluations = FALSE,
+  arguments = list()
+)
 }
 \arguments{
 \item{n_samples}{Number of samples to return.}
@@ -109,7 +118,4 @@ print(samples)
 \references{
 Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
 rejection Metropolis sampling. Applied Statistics, 44, 455-472.
-}
-\seealso{
-\url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
 }

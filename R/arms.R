@@ -61,7 +61,6 @@
 #' @param arguments List of additional arguments to be passed to log_pdf
 #' @return Vector or matrix of samples if \code{include_n_evaluations} is
 #' \code{FALSE}, otherwise a list.
-#' @seealso \url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
 #' @references Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
 #' rejection Metropolis sampling. Applied Statistics, 44, 455-472.
 #' @examples
@@ -178,7 +177,6 @@ arms <- function(
 #' @param show_progress If \code{TRUE}, a progress bar is shown.
 #' @return Matrix of samples if \code{include_n_evaluations} is \code{FALSE},
 #' otherwise a list.
-#' @seealso \url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
 #' @references Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
 #' rejection Metropolis sampling. Applied Statistics, 44, 455-472.
 #' @examples

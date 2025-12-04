@@ -4,9 +4,20 @@
 \alias{arms_gibbs}
 \title{Gibbs sampling using ARMS}
 \usage{
-arms_gibbs(n_samples, previous, log_pdf, lower, upper, initial = NULL,
-  n_initial = 10, convex = 0, max_points = 100, metropolis = TRUE,
-  include_n_evaluations = FALSE, show_progress = FALSE)
+arms_gibbs(
+  n_samples,
+  previous,
+  log_pdf,
+  lower,
+  upper,
+  initial = NULL,
+  n_initial = 10,
+  convex = 0,
+  max_points = 100,
+  metropolis = TRUE,
+  include_n_evaluations = FALSE,
+  show_progress = FALSE
+)
 }
 \arguments{
 \item{n_samples}{Number of samples to return.}
@@ -97,7 +108,4 @@ print(colMeans(samples[51 : 250, ]))
 \references{
 Gilks, W. R., Best, N. G. and Tan, K. K. C. (1995) Adaptive
 rejection Metropolis sampling. Applied Statistics, 44, 455-472.
-}
-\seealso{
-\url{http://www1.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.html}
 }

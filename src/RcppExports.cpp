@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // armsGibbs
 RObject armsGibbs(int nSamples, NumericVector previous, Function logPdf, NumericVector lower, NumericVector upper, List initial, NumericVector convex, IntegerVector maxPoints, IntegerVector metropolis, bool includeNEvaluations, bool showProgress);
 RcppExport SEXP _armspp_armsGibbs(SEXP nSamplesSEXP, SEXP previousSEXP, SEXP logPdfSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP initialSEXP, SEXP convexSEXP, SEXP maxPointsSEXP, SEXP metropolisSEXP, SEXP includeNEvaluationsSEXP, SEXP showProgressSEXP) {
